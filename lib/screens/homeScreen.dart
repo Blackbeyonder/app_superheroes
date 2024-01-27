@@ -12,10 +12,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Superheroes'),
+        backgroundColor: Colors.orange,
+        title: const Text('Superheroes'),
       ),
-      body: Center(
-        child: const Text('Contenido de la pantalla1'),
+      body: Container(
+        color: Colors.deepPurpleAccent,
+        child: Column(
+          children: [
+            Text("test1"),
+            Text("test2")
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

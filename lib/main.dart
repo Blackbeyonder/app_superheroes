@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
       title: 'Superheroes',
       initialRoute: '/',
       routes: {
-        '/': (context) => const HomeScreen(),
+        '/': (_) => const HomeScreen(),
         // '/profile': (context) => ProfileScreen(),
         // Agrega más rutas según sea necesario
       },
