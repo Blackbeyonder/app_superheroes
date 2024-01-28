@@ -105,6 +105,8 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                 title: Text(suggestion),
                 onTap: () {
                   close(context, suggestion);
+                  Navigator.pushNamed(context, '/detail');
+
                 },
               );
             },
