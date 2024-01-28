@@ -10,11 +10,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Future<List<String>>  charactersName = Future.value([]);
   @override
   void initState() {
     super.initState();
     // Llamar a tu método aquí
-    SuperHeroeService().getNameAllSuperHeroes();
+    charactersName= SuperHeroeService().getNameAllSuperHeroes();
   }
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              showSearch(context: context, delegate: CustomSearchDelegate());
+              showSearch(context: context, delegate: CustomSearchDelegate(charactersName));
             },
           ),
         ],
@@ -42,6 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
 class CustomSearchDelegate extends SearchDelegate<String> {
   @override
   String? get searchFieldLabel => 'search...';
+
+  final Future<List<String>> charactersName;
+  CustomSearchDelegate(this.charactersName);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -75,28 +79,38 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // Implementa la lógica para mostrar sugerencias de búsqueda
-    // Lista de sugerencias de búsqueda estáticas
-  final List<String> suggestions = ['Sugerencia 1', 'Sugerencia 2', 'Sugerencia 3'];
+    return FutureBuilder<List<String>>(
+      future: charactersName,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error al cargar los datos'),
+          );
+        } else {
 
-  // Filtra las sugerencias basadas en el texto de búsqueda actual
-  final filteredSuggestions = query.isEmpty
-      ? suggestions // Si la consulta está vacía, muestra todas las sugerencias
-      : suggestions.where((suggestion) => suggestion.toLowerCase().startsWith(query.toLowerCase())).toList();
-
-  // Construye la lista de sugerencias
-  return ListView.builder(
-    itemCount: filteredSuggestions.length,
-    itemBuilder: (context, index) {
-      final suggestion = filteredSuggestions[index];
-      return ListTile(
-        title: Text(suggestion),
-        onTap: () {
-          // Acción cuando se selecciona una sugerencia
-          close(context, suggestion);
-        },
-      );
-    },
-  );
+          final List<String> suggestions = snapshot.data!;
+          final filteredSuggestions = query.isEmpty
+              ? suggestions
+              : suggestions.where((suggestion) => suggestion.toLowerCase().startsWith(query.toLowerCase())).toList();
+          
+          return ListView.builder(
+            itemCount: filteredSuggestions.length,
+            itemBuilder: (context, index) {
+              final suggestion = filteredSuggestions[index];
+              return ListTile(
+                title: Text(suggestion),
+                onTap: () {
+                  close(context, suggestion);
+                },
+              );
+            },
+          );
+        }
+      },
+    );
   }
 }
