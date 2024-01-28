@@ -61,10 +61,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
      return MaterialApp(
-      title: 'Superheroes',
+      title: 'Superh',
       initialRoute: '/',
       routes: {
-        '/': (_) => const HomeScreen(),
+        '/': (context) => const HomeScreen(),
         '/detail': (context) => const DetailScren(),
         // Agrega más rutas según sea necesario
       },
