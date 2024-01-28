@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_superheroes/utils/url.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
@@ -68,7 +70,28 @@ Future<List<String>> getNameAllSuperHeroes() async {
 }
 
 
+getSearchName1(String name) async {
+  List<dynamic> results = []; // Lista para almacenar los resultados
+  final response = await http.get(Uri.parse(apiUrl+"/search/$name"));
+  if (response.statusCode == 200) {
+     // Convierte la respuesta JSON en un objeto Dart
+    final responseData = jsonDecode(response.body);
+    // print(responseData);
+    responseData.forEach((key, value) {
+      print('Clave: $key, Valor: $value');
+      if(key=="results"){
+        results= value;
+        return;
+      }
+    });
+    return results;
+   
+  } else {
+    // Ocurrió un error al hacer la solicitud
+    print('Error al hacer la solicitud: ${response.statusCode}');
+  }
 
+}
 
 
 }

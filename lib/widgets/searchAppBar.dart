@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../services/superHeroeService.dart';
 
-class SearchAppBar extends StatefulWidget implements PreferredSizeWidget{//PreferredSizeWidget to use Custom Appbar
-  const SearchAppBar({ Key? key }) : super(key: key);
+class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
+  //PreferredSizeWidget to use Custom Appbar
+  const SearchAppBar({Key? key}) : super(key: key);
 
   //PreferredSizeWidget to use Custom Appbar
   @override
@@ -14,32 +15,33 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget{//Prefe
 }
 
 class _SearchAppBarState extends State<SearchAppBar> {
-  Future<List<String>>  charactersName = Future.value([]);
+  Future<List<String>> charactersName = Future.value([]);
 
   @override
   void initState() {
     super.initState();
     // Llamar a tu método aquí
-    charactersName= SuperHeroeService().getNameAllSuperHeroes();
+    charactersName = SuperHeroeService().getNameAllSuperHeroes();
   }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text('Search character'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              showSearch(context: context, delegate: CustomSearchDelegate(charactersName));
-            },
-          ),
-        ],
-      );
+      backgroundColor: Colors.orange,
+      title: const Text('Search character'),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {
+            showSearch(
+                context: context,
+                delegate: CustomSearchDelegate(charactersName));
+          },
+        ),
+      ],
+    );
   }
 }
-
 
 class CustomSearchDelegate extends SearchDelegate<String> {
   @override
@@ -59,8 +61,6 @@ class CustomSearchDelegate extends SearchDelegate<String> {
       ),
     ];
   }
-
-  
 
   @override
   Widget buildLeading(BuildContext context) {
@@ -94,12 +94,14 @@ class CustomSearchDelegate extends SearchDelegate<String> {
             child: Text('Error al cargar los datos'),
           );
         } else {
-
           final List<String> suggestions = snapshot.data!;
           final filteredSuggestions = query.isEmpty
               ? suggestions
-              : suggestions.where((suggestion) => suggestion.toLowerCase().startsWith(query.toLowerCase())).toList();
-          
+              : suggestions
+                  .where((suggestion) =>
+                      suggestion.toLowerCase().startsWith(query.toLowerCase()))
+                  .toList();
+
           return ListView.builder(
             itemCount: filteredSuggestions.length,
             itemBuilder: (context, index) {
@@ -108,8 +110,14 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                 title: Text(suggestion),
                 onTap: () {
                   close(context, suggestion);
-                  Navigator.pushNamed(context, '/detail');
-
+                  // print(suggestion);
+                  Navigator.pushNamed(
+                    context,
+                    '/detail',
+                    arguments: {
+                      'nameSelected': suggestion.length > 0 ? suggestion : "",
+                    },
+                  );
                 },
               );
             },
