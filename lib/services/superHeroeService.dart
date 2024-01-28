@@ -60,7 +60,7 @@ Future<List<String>> getNameAllSuperHeroes() async {
            
           }
         }
-         print(charactersName);
+        //  print(charactersName);
       } else {
     // Ocurrió un error al hacer la solicitud
     print('Error al hacer la solicitud: ${response.statusCode}');
@@ -78,7 +78,7 @@ getSearchName1(String name) async {
     final responseData = jsonDecode(response.body);
     // print(responseData);
     responseData.forEach((key, value) {
-      print('Clave: $key, Valor: $value');
+      // print('Clave: $key, Valor: $value');
       if(key=="results"){
         results= value;
         return;
