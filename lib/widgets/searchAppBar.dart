@@ -15,13 +15,14 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _SearchAppBarState extends State<SearchAppBar> {
-  Future<List<String>> charactersName = Future.value([]);
+  Future<List<Map<String, dynamic>>> charactersName = Future.value([]);
 
   @override
   void initState() {
     super.initState();
     // Llamar a tu método aquí
     charactersName = SuperHeroeService().getNameAllSuperHeroes();
+    // print(charactersName);
   }
 
   @override
@@ -47,7 +48,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
   @override
   String? get searchFieldLabel => 'search...';
 
-  final Future<List<String>> charactersName;
+  final Future<List<Map<String, dynamic>>> charactersName;
   CustomSearchDelegate(this.charactersName);
 
   @override
@@ -80,50 +81,51 @@ class CustomSearchDelegate extends SearchDelegate<String> {
     );
   }
 
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return FutureBuilder<List<String>>(
-      future: charactersName,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error al cargar los datos'),
-          );
-        } else {
-          final List<String> suggestions = snapshot.data!;
-          final filteredSuggestions = query.isEmpty
-              ? suggestions
-              : suggestions
-                  .where((suggestion) =>
-                      suggestion.toLowerCase().startsWith(query.toLowerCase()))
-                  .toList();
+@override
+Widget buildSuggestions(BuildContext context) {
+  return FutureBuilder<List<Map<String, dynamic>>>(
+    future: charactersName, // Tu Future<List<Map<String, dynamic>>>
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        // Si está esperando la carga, muestra un indicador de progreso
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (snapshot.hasError) {
+        // Si hay un error, muestra un mensaje de error
+        return Center(
+          child: Text('Error al cargar los datos'),
+        );
+      } else {
+        // Si la carga fue exitosa, puedes acceder a los datos en snapshot.data
+        final List<Map<String, dynamic>> suggestions = snapshot.data!;
+        final filteredSuggestions = query.isEmpty
+            ? suggestions
+            : suggestions.where((character) =>
+                character['name'].toLowerCase().startsWith(query.toLowerCase()))
+            .toList();
 
-          return ListView.builder(
-            itemCount: filteredSuggestions.length,
-            itemBuilder: (context, index) {
-              final suggestion = filteredSuggestions[index];
-              return ListTile(
-                title: Text(suggestion),
-                onTap: () {
-                  close(context, suggestion);
-                  // print(suggestion);
-                  Navigator.pushNamed(
-                    context,
-                    '/detail',
-                    arguments: {
-                      'nameSelected': suggestion.length > 0 ? suggestion : "",
-                    },
-                  );
-                },
-              );
-            },
-          );
-        }
-      },
-    );
-  }
+        return ListView.builder(
+          itemCount: filteredSuggestions.length,
+          itemBuilder: (context, index) {
+            final suggestion = filteredSuggestions[index];
+            return ListTile(
+              title: Text(suggestion['name']),
+              onTap: () {
+                close(context, suggestion['name']);
+                Navigator.pushNamed(
+                  context,
+                  '/detail',
+                  arguments: {
+                    'idSelected': suggestion['id'],
+                  },
+                );
+              },
+            );
+          },
+        );
+      }
+    },
+  );
+}
 }

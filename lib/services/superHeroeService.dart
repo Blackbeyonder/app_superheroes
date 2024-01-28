@@ -18,8 +18,8 @@ class SuperHeroeService{
   }
 }
 
-Future<List<String>> getNameAllSuperHeroes() async {
-   List<String> charactersName = [];
+Future<List<Map<String, dynamic>>> getNameAllSuperHeroes() async {
+   List<Map<String, dynamic>> charactersName = [];
 
 
   final response = await http.get(Uri.parse("https://superheroapi.com/ids.html"));
@@ -43,13 +43,24 @@ Future<List<String>> getNameAllSuperHeroes() async {
           for (var tr in trElements) {
 
             var tdElements = tr.getElementsByTagName('td');
+             Map<String, dynamic> character = {
+                "id":"",
+                "name":""
+               };
+           
             for (var i = 0; i < tdElements.length; i++) {
               var td = tdElements[i];
               var td2 = td.innerHtml;
-              if(i==1){
-                charactersName.add(td2);
-
+              
+               
+              if(i==0){
+                character["id"]=td2;
               }
+              if(i==1){
+                character["name"]=td2;
+                charactersName.add(character);
+              }
+              
               
               // Imprime el índice y el contenido del elemento td
               // print('Índice: $i, Contenido: $td2');
@@ -70,20 +81,21 @@ Future<List<String>> getNameAllSuperHeroes() async {
 }
 
 
-getSearchName1(String name) async {
-  List<dynamic> results = []; // Lista para almacenar los resultados
-  final response = await http.get(Uri.parse(apiUrl+"/search/$name"));
+getSearchById1(String id) async {
+  Map<String, dynamic> results = {}; // Lista para almacenar los resultados
+  final response = await http.get(Uri.parse(apiUrl+"/$id"));
   if (response.statusCode == 200) {
      // Convierte la respuesta JSON en un objeto Dart
     final responseData = jsonDecode(response.body);
     // print(responseData);
     responseData.forEach((key, value) {
       // print('Clave: $key, Valor: $value');
-      if(key=="results"){
-        results= value;
+      if(key=="response" && value=="success"){
+        results= responseData;
         return;
       }
     });
+    // print(results);
     return results;
    
   } else {

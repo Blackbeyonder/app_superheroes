@@ -11,7 +11,7 @@ class DetailScren extends StatefulWidget {
 }
 
 class _DetailScrenState extends State<DetailScren> {
-  List<dynamic> dataCharacter = []; // Lista para almacenar los héroes
+  Map<String, dynamic> dataCharacter = {}; // Lista para almacenar los héroes
   String imageUrl = "";
 //[]  {}   "":""
  List<Map<String, dynamic>> characterTest =[
@@ -70,8 +70,8 @@ class _DetailScrenState extends State<DetailScren> {
  ];
 
 
-  String heroName = '';
-  String nameSelected = '';
+  String Name = '';
+  String idSelected = '';
   @override
   void initState() {
     super.initState();
@@ -91,18 +91,19 @@ class _DetailScrenState extends State<DetailScren> {
       // Obtén los argumentos pasados desde la ruta anterior
       final Map<String, dynamic> args =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      nameSelected = args['nameSelected'];
+      idSelected = args['idSelected'];
 
       // Llamar al servicio para obtener detalles del héroe
-      final response = await SuperHeroeService().getSearchName1(nameSelected);
+      final response = await SuperHeroeService().getSearchById1(idSelected);
 
       // Procesar la respuesta del servicio y actualizar el estado
       setState(() {
         print(response);
         dataCharacter =
             response; // Actualizar el estado con el nombre del héroe
-        imageUrl = dataCharacter[0]["image"]["url"];
-        print(imageUrl);
+        imageUrl = dataCharacter["image"]["url"];
+        Name = dataCharacter["name"];
+        // print(imageUrl);
       });
     } catch (error) {
       // Manejar errores si la solicitud falla
@@ -122,7 +123,7 @@ class _DetailScrenState extends State<DetailScren> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text(nameSelected,
+                child: Text(Name,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 20)),
               ),
