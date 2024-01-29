@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/superHeroeService.dart';
+import '../utils/detailScreenMethods.dart';
 import '../widgets/searchAppBar.dart';
 
 class DetailScren extends StatefulWidget {
@@ -103,6 +104,7 @@ class _DetailScrenState extends State<DetailScren> {
             response; // Actualizar el estado con el nombre del héroe
         imageUrl = dataCharacter["image"]["url"];
         Name = dataCharacter["name"];
+        DetailScreenMethods().reorganizeObj(dataCharacter);
         // print(imageUrl);
       });
     } catch (error) {
