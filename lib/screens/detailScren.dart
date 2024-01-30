@@ -188,6 +188,10 @@ class showImg extends StatelessWidget {
             width: 200,
             height: 200,
             fit: BoxFit.fitWidth,
+            errorBuilder: (context, error, stackTrace) {
+            // Devolver un widget alternativo en caso de error
+            return const Text('Imagen no encontrada');
+          },
           ),
         ),
       ),
