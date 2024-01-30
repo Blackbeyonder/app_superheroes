@@ -99,12 +99,12 @@ class _DetailScrenState extends State<DetailScren> {
 
       // Procesar la respuesta del servicio y actualizar el estado
       setState(() {
-        print(response);
+        // print(response);
         dataCharacter =
             response; // Actualizar el estado con el nombre del héroe
         imageUrl = dataCharacter["image"]["url"];
         Name = dataCharacter["name"];
-        DetailScreenMethods().reorganizeObj(dataCharacter);
+        // DetailScreenMethods().reorganizeObj(dataCharacter);
         // print(imageUrl);
       });
     } catch (error) {
@@ -141,17 +141,11 @@ class _DetailScrenState extends State<DetailScren> {
                   ),
                 ),
               Expanded(
-                child: Container(
-                  color: Colors.blue,
-                  child: ListView.builder(
-                    itemCount: characterTest.length,
-                    itemBuilder: (context, index) {
-                        final character = characterTest[index];
-                      return ListTile(
-                        title: Text(character["name"]),
-                        // Puedes personalizar la apariencia de cada fila aquí
-                      );
-                    },
+                child: SingleChildScrollView(
+                  child: Container(
+                    // color: Colors.blue,
+                    child: DetailScreenMethods.buildInfo(dataCharacter)
+
                   ),
                 ),
               ),
