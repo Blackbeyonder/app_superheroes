@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 class SearchAppBarMethods {
 
   findIMGColor(String img){
-    print(img);
+    
+    if(img!=""){
+      print("in method");
+      print(img);
+
+    }
 
   }
 

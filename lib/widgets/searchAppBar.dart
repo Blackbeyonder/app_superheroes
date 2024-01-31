@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/superHeroeService.dart';
+import '../utils/searchAppBarMethods.dart';
 
 class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   //PreferredSizeWidget to use Custom Appbar
@@ -25,8 +26,9 @@ class _SearchAppBarState extends State<SearchAppBar> {
     // Llamar a tu método aquí
    
     charactersName = SuperHeroeService().getNameAllSuperHeroes();
+    SearchAppBarMethods().findIMGColor(widget.imageUrl);
     // print(charactersName);
-     print(widget.imageUrl);
+    //  print(widget.imageUrl);
   }
 
   @override
