@@ -18,6 +18,8 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _SearchAppBarState extends State<SearchAppBar> {
   Future<List<Map<String, dynamic>>> charactersName = Future.value([]);
+  Color predominateColor=Colors.orange;
+  Color textColorAndIcon = Colors.white;
   
   
   @override
@@ -26,20 +28,42 @@ class _SearchAppBarState extends State<SearchAppBar> {
     // Llamar a tu método aquí
    
     charactersName = SuperHeroeService().getNameAllSuperHeroes();
-    SearchAppBarMethods().findIMGColor(widget.imageUrl);
+    this.obtenerColor(widget.imageUrl);
     // print(charactersName);
     //  print(widget.imageUrl);
   }
+
+  void obtenerColor(String img) async {
+  
+  
+  // Actualizar el estado después de obtener el color
+ 
+    // Esperar a que se complete el futuro y obtener el color predominante
+    var response = await SearchAppBarMethods().findIMGColor(img);
+  
+    setState(() {
+      predominateColor=response;
+      final luminance = predominateColor.computeLuminance();
+      textColorAndIcon = luminance > 0.5 ? Colors.black : Colors.white; // Si es claro, usa texto negro; de lo contrario, usa texto blanco
+  
+    });
+ 
+}
 
   @override
   Widget build(BuildContext context) {
     
     return AppBar(
-      backgroundColor: Colors.orange,
-      title: const Text('Search character'),
+      backgroundColor: predominateColor,
+      title:  Text('Search character', style: TextStyle(
+    color: textColorAndIcon, // Utiliza el color determinado para el texto
+    fontSize: 16, // Tamaño de fuente
+    fontWeight: FontWeight.bold, // Peso de la fuente
+  ),),
+   iconTheme: IconThemeData(color: textColorAndIcon),
       actions: [
         IconButton(
-          icon: Icon(Icons.search),
+          icon: Icon(Icons.search, color:textColorAndIcon),
           onPressed: () {
             showSearch(
                 context: context,
