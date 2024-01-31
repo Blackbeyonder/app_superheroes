@@ -4,7 +4,8 @@ import '../services/superHeroeService.dart';
 
 class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   //PreferredSizeWidget to use Custom Appbar
-  const SearchAppBar({Key? key}) : super(key: key);
+  final String imageUrl;
+  const SearchAppBar({Key? key, this.imageUrl = ""}) : super(key: key);
 
   //PreferredSizeWidget to use Custom Appbar
   @override
@@ -16,17 +17,21 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _SearchAppBarState extends State<SearchAppBar> {
   Future<List<Map<String, dynamic>>> charactersName = Future.value([]);
-
+  
+  
   @override
   void initState() {
     super.initState();
     // Llamar a tu método aquí
+   
     charactersName = SuperHeroeService().getNameAllSuperHeroes();
     // print(charactersName);
+     print(widget.imageUrl);
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return AppBar(
       backgroundColor: Colors.orange,
       title: const Text('Search character'),

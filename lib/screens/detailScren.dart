@@ -88,7 +88,7 @@ class _DetailScrenState extends State<DetailScren> {
   // Método asincrónico para obtener detalles del héroe
   Future<void> _getHeroDetails() async {
     try {
-      print("AQUI");
+      // print("AQUI");
       // Obtén los argumentos pasados desde la ruta anterior
       final Map<String, dynamic> args =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -116,7 +116,7 @@ class _DetailScrenState extends State<DetailScren> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const SearchAppBar(),
+        appBar: imageUrl.isNotEmpty ? SearchAppBar(imageUrl: imageUrl) : null, //Nose porque funciona con null
         body: Container(
           color: Color.fromARGB(255, 240, 240, 240),
           child: Column(
