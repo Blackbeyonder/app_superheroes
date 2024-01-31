@@ -25,59 +25,62 @@ class HomeScreenMethods {
     }
 
     try {
-      return ListView.builder(
-        itemCount: list10Characters.length,
-        itemBuilder: (BuildContext context, int index) {
-          final character = list10Characters[index];
+      return Container(
+        color: const Color.fromARGB(255, 199, 199, 199),
+        child: ListView.builder(
+          itemCount: list10Characters.length,
+          itemBuilder: (BuildContext context, int index) {
+            final character = list10Characters[index];
 
-          // Construir y devolver el elemento
-          return GestureDetector(
-            onTap: () {
-            // Acción a realizar cuando se hace clic en la tarjeta
-            Navigator.pushNamed(
-                  context,
-                  '/detail',
-                  arguments: {
-                    'idSelected': character['id'],
-                  },
-                );
-            // Puedes llamar a una función aquí o ejecutar cualquier otra lógica
-          },
-            child: Card(
-              margin: EdgeInsets.all(8.0), // Margen alrededor de la tarjeta
-              child: Padding(
-                padding: EdgeInsets.all(8.0), // Espaciado interno de la tarjeta
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(8.0), // Radio de la esquina
-                      child: Image.network(
-                        character["img"],
-                        height: 200,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Text('Imagen no encontrada');
-                        },
+            // Construir y devolver el elemento
+            return GestureDetector(
+              onTap: () {
+              // Acción a realizar cuando se hace clic en la tarjeta
+              Navigator.pushNamed(
+                    context,
+                    '/detail',
+                    arguments: {
+                      'idSelected': character['id'],
+                    },
+                  );
+              // Puedes llamar a una función aquí o ejecutar cualquier otra lógica
+            },
+              child: Card(
+                margin: EdgeInsets.all(8.0), // Margen alrededor de la tarjeta
+                child: Padding(
+                  padding: EdgeInsets.all(8.0), // Espaciado interno de la tarjeta
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(8.0), // Radio de la esquina
+                        child: Image.network(
+                          character["img"],
+                          height: 200,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Text('Imagen no encontrada');
+                          },
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8), // Espacio entre la imagen y el texto
-                    Text(
-                      character["name"],
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 4), // Espacio entre el nombre y el subtítulo
-                    Text(
-                      "Publisher: ${character["publisher"]}",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
+                      SizedBox(height: 8), // Espacio entre la imagen y el texto
+                      Text(
+                        character["name"],
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 4), // Espacio entre el nombre y el subtítulo
+                      Text(
+                        "Publisher: ${character["publisher"]}",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       );
     } catch (e) {
       print(e);
