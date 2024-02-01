@@ -63,6 +63,12 @@ class _SearchAppBarState extends State<SearchAppBar> {
    iconTheme: IconThemeData(color: textColorAndIcon),
       actions: [
         IconButton(
+          icon: Icon(Icons.favorite_outline_rounded, color:textColorAndIcon),
+          onPressed: () {
+            Navigator.pushNamed(context,'/favorites');
+          },
+        ),
+        IconButton(
           icon: Icon(Icons.search, color:textColorAndIcon),
           onPressed: () {
             showSearch(

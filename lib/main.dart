@@ -1,5 +1,6 @@
 
 import 'package:app_superheroes/screens/detailScren.dart';
+import 'package:app_superheroes/screens/favoritesScreen.dart';
 import 'package:app_superheroes/screens/homeScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -66,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       routes: {
         '/': (context) => const HomeScreen(),
         '/detail': (context) => const DetailScren(),
+        '/favorites': (context) => const FavoritesScreen(),
         // Agrega más rutas según sea necesario
       },
     );

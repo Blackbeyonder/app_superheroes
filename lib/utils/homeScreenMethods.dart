@@ -13,11 +13,16 @@ class HomeScreenMethods {
       String numberAsString = number.toString();
       var searchById1 =
           await SuperHeroeService().getSearchById1(numberAsString);
-      if (searchById1?.containsKey('response') &&
-          searchById1["response"] == "success") {
+      if (searchById1?.containsKey('response') && searchById1["response"] == "success") {
+
         characterInfo["id"] = searchById1["id"];
         characterInfo["name"] = searchById1["name"];
-        characterInfo["img"] = searchById1["image"]["url"];
+
+        //Check img
+        var img = searchById1["image"] != null ? searchById1["image"]["url"] : "";
+        bool exist= await SuperHeroeService().checkImageExistence(img);
+        characterInfo["img"] = exist==true ? img : "";
+
         characterInfo["publisher"] = searchById1["biography"]["publisher"];
 
         list10Characters.add(characterInfo);
@@ -60,7 +65,7 @@ class HomeScreenMethods {
                           height: 200,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Text('Imagen no encontrada');
+                            return const Text('Img no found');
                           },
                         ),
                       ),

@@ -88,6 +88,9 @@ class _DetailScrenState extends State<DetailScren> {
 
       // Llamar al servicio para obtener detalles del héroe
       final response = await SuperHeroeService().getSearchById1(idSelected);
+      var img = response["image"] != null ? response["image"]["url"] : "";
+        bool exist= await SuperHeroeService().checkImageExistence(img);
+        response["image"]["url"] = exist==true ? img : "not found";
 
       // Procesar la respuesta del servicio y actualizar el estado
       setState(() {
@@ -180,7 +183,6 @@ class showImg extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               // Acción que deseas realizar cuando se toca la imagen
-              print("qlo");
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -218,7 +220,7 @@ class showImg extends StatelessWidget {
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               // Devuelve un widget alternativo en caso de error
-                              return const Text('Imagen no encontrada');
+                              return const Text('Img not found');
                             },
                           ),
                         ),

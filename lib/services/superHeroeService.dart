@@ -105,5 +105,21 @@ getSearchById1(String id) async {
 
 }
 
+Future<bool> checkImageExistence(String imageUrl) async {
+  try {
+    final response = await http.head(Uri.parse(imageUrl));
+    if(response.statusCode == 200){
+      return true;
+    }else{
+      return false;
+    }
+    
+  } catch (e) {
+    // Manejar errores, como conexión fallida, URL incorrecta, etc.
+    return false;
+  }
+}
+
+
 
 }
