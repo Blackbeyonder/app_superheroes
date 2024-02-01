@@ -15,7 +15,7 @@ class _DetailScrenState extends State<DetailScren> {
   Map<String, dynamic> dataCharacter = {}; // Lista para almacenar los héroes
   String imageUrl = "";
 //[]  {}   "":""
- List<Map<String, dynamic>> characterTest =[
+  List<Map<String, dynamic>> characterTest = [
     {
       "id": "69",
       "name": "Batman",
@@ -45,31 +45,23 @@ class _DetailScrenState extends State<DetailScren> {
       "appearance": {
         "gender": "Male",
         "race": "Human",
-        "height": [
-          "5'10",
-          "178 cm"
-        ],
-        "weight": [
-          "170 lb",
-          "77 kg"
-        ],
+        "height": ["5'10", "178 cm"],
+        "weight": ["170 lb", "77 kg"],
         "eye-color": "Blue",
         "hair-color": "Black"
       },
-      "work": {
-        "occupation": "-",
-        "base": "21st Century Gotham City"
-      },
+      "work": {"occupation": "-", "base": "21st Century Gotham City"},
       "connections": {
         "group-affiliation": "Batman Family, Justice League Unlimited",
-        "relatives": "Bruce Wayne (biological father), Warren McGinnis (father, deceased), Mary McGinnis (mother), Matt McGinnis (brother)"
+        "relatives":
+            "Bruce Wayne (biological father), Warren McGinnis (father, deceased), Mary McGinnis (mother), Matt McGinnis (brother)"
       },
       "image": {
-        "url": "https://www.superherodb.com/pictures2/portraits/10/100/10441.jpg"
+        "url":
+            "https://www.superherodb.com/pictures2/portraits/10/100/10441.jpg"
       }
     },
- ];
-
+  ];
 
   String Name = '';
   String idSelected = '';
@@ -116,7 +108,9 @@ class _DetailScrenState extends State<DetailScren> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: imageUrl.isNotEmpty ? SearchAppBar(imageUrl: imageUrl) : null, //Nose porque funciona con null
+        appBar: imageUrl.isNotEmpty
+            ? SearchAppBar(imageUrl: imageUrl)
+            : null, //Nose porque funciona con null
         body: Container(
           color: Color.fromARGB(255, 240, 240, 240),
           child: Column(
@@ -131,7 +125,7 @@ class _DetailScrenState extends State<DetailScren> {
               ),
               if (imageUrl.isNotEmpty) // Verificar si imageUrl no está vacío
                 Center(
-                  child: showImg(imageUrl: imageUrl),
+                  child: showImg(imageUrl: imageUrl, Name: Name),
                 ),
               if (imageUrl.isEmpty)
                 const Center(
@@ -143,10 +137,8 @@ class _DetailScrenState extends State<DetailScren> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Container(
-                    // color: Colors.blue,
-                    child: DetailScreenMethods.buildInfo(dataCharacter)
-
-                  ),
+                      // color: Colors.blue,
+                      child: DetailScreenMethods.buildInfo(dataCharacter)),
                 ),
               ),
             ],
@@ -159,9 +151,11 @@ class showImg extends StatelessWidget {
   const showImg({
     Key? key,
     required this.imageUrl,
+    required this.Name,
   }) : super(key: key);
 
   final String imageUrl;
+  final String Name;
 
   @override
   Widget build(BuildContext context) {
@@ -183,15 +177,80 @@ class showImg extends StatelessWidget {
               ),
             ],
           ),
-          child: Image.network(
-            imageUrl,
-            width: 200,
-            height: 200,
-            fit: BoxFit.fitWidth,
-            errorBuilder: (context, error, stackTrace) {
-            // Devolver un widget alternativo en caso de error
-            return const Text('Imagen no encontrada');
-          },
+          child: GestureDetector(
+            onTap: () {
+              // Acción que deseas realizar cuando se toca la imagen
+              print("qlo");
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    child: LayoutBuilder(
+                      builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return SizedBox(
+                          width:
+                              constraints.maxWidth, // Ancho máximo del Dialog
+                          height: 500, // Altura máxima del Dialog
+                          child: Stack(
+                            children: [
+                              Image.network(
+                                imageUrl,
+                                width:
+                                    constraints.maxWidth, // Ancho de la imagen
+                                height: constraints
+                                    .maxHeight, // Altura de la imagen
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  // Devuelve un widget alternativo en caso de error
+                                  return const Text('Imagen no encontrada');
+                                },
+                              ),
+                              Positioned(
+                                top: 0, // Ajusta la posición vertical del texto
+                                left:
+                                    0, // Ajusta la posición horizontal del texto
+                                right:
+                                    0, // Ajusta la posición horizontal del texto
+                                child: Center(
+                                  child: Container(
+                                    padding: EdgeInsets.all(
+                                        3), // Ajusta el espaciado del contenedor del texto
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 233, 233, 233),
+                                      borderRadius: BorderRadius.circular(
+                                          10.0), // Define el radio de borde del contenedor
+                                    ),
+                                    child: Text(
+                                      Name,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+            child: Image.network(
+              imageUrl,
+              width: 200,
+              height: 200,
+              fit: BoxFit.fitWidth,
+              errorBuilder: (context, error, stackTrace) {
+                // Devolver un widget alternativo en caso de error
+                return const Text('Imagen no encontrada');
+              },
+            ),
           ),
         ),
       ),
