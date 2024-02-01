@@ -85,8 +85,7 @@ class HomeScreenMethods {
                           Favorite(characterID:character['id']),
                         ],
                       ),
-                      const SizedBox(
-                          height: 4), // Espacio entre el nombre y el subtítulo
+                      
                       Text(
                         "Publisher: ${character["publisher"]}",
                         style: TextStyle(fontSize: 16),
@@ -123,73 +122,8 @@ class HomeScreenMethods {
     return randomNumbers;
   }
 
-  static Future<IconButton> isFavorite(context, String characterID) async {
-    try {
-      bool saved = await isSaved(characterID);
-
-      if(saved==true){
-        return IconButton(
-        icon: const Icon(Icons.favorite_rounded, color: Colors.black),
-        onPressed: () {
-          selectAndDesselect("desSelect", characterID);
-          // setState(() {});
-        },
-      );
-
-      }else{
-        return IconButton(
-        icon: const Icon(Icons.favorite_outline_rounded, color: Colors.black),
-        onPressed: () {
-          selectAndDesselect("Select", characterID);
-        },
-      );
-
-      }
-      
-    } catch (e) {
-      print(e);
-      return IconButton(
-        icon: const Icon(Icons.heart_broken, color: Colors.black),
-        onPressed: () {
-          print("error");
-        },
-      );
-    }
-  }
-
-  static Future<bool> isSaved(String characterID) async {
-    
-    // Recuperar una lista de enteros
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? storageCharacters = prefs.getStringList('storageCharacters');
-    if (storageCharacters != null) {
-      List<int> getStorageList = storageCharacters.map((e) => int.parse(e)).toList();
-
-      int numberToFind = int.parse(characterID);
-      if (getStorageList.contains(numberToFind)) {
-        print('Contiene');
-        return true;
-      } 
-    }else{
-      return false;
-    } 
-
-    return false;
 
 
-  }
-
-  static selectAndDesselect(String action, String characterID){
-    if(action=="Select"){
-
-    }
-
-    if(action=="desSelect"){
-
-    }
-    
-
-  }
 
 
   

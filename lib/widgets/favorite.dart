@@ -32,10 +32,13 @@ class _FavoriteState extends State<Favorite> {
   Future<void> checkIsFavorite() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? favorites = prefs.getStringList('favorites') ?? [];
-    setState(() {
-      _isFavorite = favorites.contains(widget.characterID);
-
-    });
+    if (favorites.isNotEmpty) {
+      List<int> favoriteIds = favorites.map((id) => int.parse(id)).toList();
+      int numberToFind=int.parse(widget.characterID);
+      setState(() {
+        _isFavorite = favoriteIds.contains(numberToFind);
+      });
+    }
   }
 
   // Método para alternar el estado de favorito
