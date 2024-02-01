@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import '../services/superHeroeService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../widgets/favorite.dart';
 
 class HomeScreenMethods {
   static Future<Widget> buildInfo() async {
@@ -13,15 +16,16 @@ class HomeScreenMethods {
       String numberAsString = number.toString();
       var searchById1 =
           await SuperHeroeService().getSearchById1(numberAsString);
-      if (searchById1?.containsKey('response') && searchById1["response"] == "success") {
-
+      if (searchById1?.containsKey('response') &&
+          searchById1["response"] == "success") {
         characterInfo["id"] = searchById1["id"];
         characterInfo["name"] = searchById1["name"];
 
         //Check img
-        var img = searchById1["image"] != null ? searchById1["image"]["url"] : "";
-        bool exist= await SuperHeroeService().checkImageExistence(img);
-        characterInfo["img"] = exist==true ? img : "";
+        var img =
+            searchById1["image"] != null ? searchById1["image"]["url"] : "";
+        bool exist = await SuperHeroeService().checkImageExistence(img);
+        characterInfo["img"] = exist == true ? img : "";
 
         characterInfo["publisher"] = searchById1["biography"]["publisher"];
 
@@ -40,20 +44,21 @@ class HomeScreenMethods {
             // Construir y devolver el elemento
             return GestureDetector(
               onTap: () {
-              // Acción a realizar cuando se hace clic en la tarjeta
-              Navigator.pushNamed(
-                    context,
-                    '/detail',
-                    arguments: {
-                      'idSelected': character['id'],
-                    },
-                  );
-              // Puedes llamar a una función aquí o ejecutar cualquier otra lógica
-            },
+                // Acción a realizar cuando se hace clic en la tarjeta
+                Navigator.pushNamed(
+                  context,
+                  '/detail',
+                  arguments: {
+                    'idSelected': character['id'],
+                  },
+                );
+                // Puedes llamar a una función aquí o ejecutar cualquier otra lógica
+              },
               child: Card(
                 margin: EdgeInsets.all(8.0), // Margen alrededor de la tarjeta
                 child: Padding(
-                  padding: EdgeInsets.all(8.0), // Espaciado interno de la tarjeta
+                  padding:
+                      EdgeInsets.all(8.0), // Espaciado interno de la tarjeta
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -70,11 +75,18 @@ class HomeScreenMethods {
                         ),
                       ),
                       SizedBox(height: 8), // Espacio entre la imagen y el texto
-                      Text(
-                        character["name"],
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      Row(
+                        children: [
+                          Text(
+                            character["name"],
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          Favorite(characterID:character['id']),
+                        ],
                       ),
-                      SizedBox(height: 4), // Espacio entre el nombre y el subtítulo
+                      const SizedBox(
+                          height: 4), // Espacio entre el nombre y el subtítulo
                       Text(
                         "Publisher: ${character["publisher"]}",
                         style: TextStyle(fontSize: 16),
@@ -110,4 +122,75 @@ class HomeScreenMethods {
     }
     return randomNumbers;
   }
+
+  static Future<IconButton> isFavorite(context, String characterID) async {
+    try {
+      bool saved = await isSaved(characterID);
+
+      if(saved==true){
+        return IconButton(
+        icon: const Icon(Icons.favorite_rounded, color: Colors.black),
+        onPressed: () {
+          selectAndDesselect("desSelect", characterID);
+          // setState(() {});
+        },
+      );
+
+      }else{
+        return IconButton(
+        icon: const Icon(Icons.favorite_outline_rounded, color: Colors.black),
+        onPressed: () {
+          selectAndDesselect("Select", characterID);
+        },
+      );
+
+      }
+      
+    } catch (e) {
+      print(e);
+      return IconButton(
+        icon: const Icon(Icons.heart_broken, color: Colors.black),
+        onPressed: () {
+          print("error");
+        },
+      );
+    }
+  }
+
+  static Future<bool> isSaved(String characterID) async {
+    
+    // Recuperar una lista de enteros
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? storageCharacters = prefs.getStringList('storageCharacters');
+    if (storageCharacters != null) {
+      List<int> getStorageList = storageCharacters.map((e) => int.parse(e)).toList();
+
+      int numberToFind = int.parse(characterID);
+      if (getStorageList.contains(numberToFind)) {
+        print('Contiene');
+        return true;
+      } 
+    }else{
+      return false;
+    } 
+
+    return false;
+
+
+  }
+
+  static selectAndDesselect(String action, String characterID){
+    if(action=="Select"){
+
+    }
+
+    if(action=="desSelect"){
+
+    }
+    
+
+  }
+
+
+  
 }
