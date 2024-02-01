@@ -185,57 +185,44 @@ class showImg extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return Dialog(
-                    child: LayoutBuilder(
-                      builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        return SizedBox(
-                          width:
-                              constraints.maxWidth, // Ancho máximo del Dialog
-                          height: 500, // Altura máxima del Dialog
-                          child: Stack(
-                            children: [
-                              Image.network(
-                                imageUrl,
-                                width:
-                                    constraints.maxWidth, // Ancho de la imagen
-                                height: constraints
-                                    .maxHeight, // Altura de la imagen
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  // Devuelve un widget alternativo en caso de error
-                                  return const Text('Imagen no encontrada');
-                                },
-                              ),
-                              Positioned(
-                                top: 0, // Ajusta la posición vertical del texto
-                                left:
-                                    0, // Ajusta la posición horizontal del texto
-                                right:
-                                    0, // Ajusta la posición horizontal del texto
-                                child: Center(
-                                  child: Container(
-                                    padding: EdgeInsets.all(
-                                        3), // Ajusta el espaciado del contenedor del texto
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 233, 233, 233),
-                                      borderRadius: BorderRadius.circular(
-                                          10.0), // Define el radio de borde del contenedor
-                                    ),
-                                    child: Text(
-                                      Name,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                    backgroundColor: Colors.transparent,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal:
+                                  16), // Ajusta el espaciado del contenedor del texto
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 233, 233, 233),
+                            borderRadius: BorderRadius.circular(
+                                10), // Define el radio de borde del contenedor
                           ),
-                        );
-                      },
+                          child: Text(
+                            Name,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                            height: 15), // Espacio entre la imagen y el texto
+                        Container(
+                          height: 500, // Altura de la imagen
+                          width: double.infinity,
+                          child: Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              // Devuelve un widget alternativo en caso de error
+                              return const Text('Imagen no encontrada');
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
