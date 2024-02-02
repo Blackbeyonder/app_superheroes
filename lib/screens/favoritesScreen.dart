@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../provider/cardModel.dart';
+import '../widgets/favorite.dart';
 import '../widgets/searchAppBar.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -15,22 +18,31 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
    @override
   void initState() {
     super.initState();
-    checkIsFavorite(); // Verificar si el personaje es favorito al inicializar el estado
   }
   
   @override
   Widget build(BuildContext context) {
+     final items = Provider.of<CardModel>(context).items;
+     
     return Scaffold(
       appBar: const SearchAppBar(),
-      body: Text("test"),
+      body:  ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+
+        return Card(
+          child: ListTile(
+            title: Text(item['title']),
+            subtitle: Text(item['subtitle']),
+            trailing: Favorite2(itemId: item['id']),
+          ),
+        );
+      },
+    ),
       
     );
   }
 
-  // Método para verificar favoritos
-  Future<void> checkIsFavorite() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? favorites = prefs.getStringList('favorites') ?? [];
-    print(favorites);
-  }
+ 
 }

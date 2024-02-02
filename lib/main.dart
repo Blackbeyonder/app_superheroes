@@ -1,11 +1,21 @@
 
+import 'package:app_superheroes/provider/cardModel.dart';
 import 'package:app_superheroes/screens/detailScren.dart';
 import 'package:app_superheroes/screens/favoritesScreen.dart';
 import 'package:app_superheroes/screens/homeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CardModel()),
+        // Agrega aquí otros proveedores si los necesitas
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

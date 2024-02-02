@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../provider/cardModel.dart';
 
 class Favorite extends StatefulWidget {
   const Favorite({ Key? key, required this.characterID }) : super(key: key);
@@ -55,5 +58,35 @@ class _FavoriteState extends State<Favorite> {
       }
       prefs.setStringList('favorites', favorites); // Guardar la lista de favoritos actualizada en SharedPreferences
     });
+  }
+}
+
+class Favorite2 extends StatefulWidget {
+  final String itemId;
+  const Favorite2({ Key? key, required this.itemId }) : super(key: key);
+
+  @override
+  _FavoriteState2 createState() => _FavoriteState2();
+}
+
+class _FavoriteState2 extends State<Favorite2> {
+  @override
+  Widget build(BuildContext context) {
+    final isFavorite = Provider.of<CardModel>(context)
+        .items
+        .firstWhere((item) => item['id'] == widget.itemId)['isFavorite'];
+        print(isFavorite);
+        final cardModel = Provider.of<CardModel>(context); // Obtiene la instancia de CardModel desde el context
+
+    return IconButton(
+      icon: Icon(
+        isFavorite ? Icons.favorite : Icons.favorite_border,
+        color: isFavorite ? Colors.red : null,
+      ),
+      onPressed: () {
+        cardModel.removeFavorite(widget.itemId);
+      },
+    );
+
   }
 }
