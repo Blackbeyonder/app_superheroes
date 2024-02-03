@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:app_superheroes/utils/url.dart';
+import 'package:search_superheroes/utils/url.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
