@@ -1,5 +1,6 @@
 
 import 'package:app_superheroes/provider/cardModel.dart';
+import 'package:app_superheroes/provider/homeProvider.dart';
 import 'package:app_superheroes/screens/detailScren.dart';
 import 'package:app_superheroes/screens/favoritesScreen.dart';
 import 'package:app_superheroes/screens/homeScreen.dart';
@@ -11,6 +12,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CardModel()),
+        ChangeNotifierProvider(create: (_) => HomeProvider()),
         // Agrega aquí otros proveedores si los necesitas
       ],
       child: MyApp(),

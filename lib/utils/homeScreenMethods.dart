@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:math';
 
+import '../provider/homeProvider.dart';
 import '../services/superHeroeService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/favorite.dart';
 
 class HomeScreenMethods {
-  static Future<Widget> buildInfo() async {
+  static Future<Widget> buildInfo (BuildContext context) async {
     Set<int> randomNumbers = generate10Numbers();
     List<Map<String, dynamic>> list10Characters = [];
 
@@ -28,16 +30,26 @@ class HomeScreenMethods {
         characterInfo["img"] = exist == true ? img : "";
 
         characterInfo["publisher"] = searchById1["biography"]["publisher"];
-
+        characterInfo["isFavorite"] = false;
         list10Characters.add(characterInfo);
       }
+      
+      
     }
+
+    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    homeProvider.updateItemsHome(list10Characters);
+    final itemsHome = homeProvider.itemsHome;
+
+    print("HOME");
+    print(itemsHome);
+    print("HOME----");
 
     try {
       return Container(
         color: const Color.fromARGB(255, 199, 199, 199),
         child: ListView.builder(
-          itemCount: list10Characters.length,
+          itemCount: itemsHome.length,
           itemBuilder: (BuildContext context, int index) {
             final character = list10Characters[index];
 
