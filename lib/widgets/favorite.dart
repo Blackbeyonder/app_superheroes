@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -5,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../provider/cardModel.dart';
 
 class Favorite extends StatefulWidget {
-  const Favorite({ Key? key, required this.characterID }) : super(key: key);
-  final String characterID;
+  const Favorite({ Key? key, required this.character }) : super(key: key);
+  final Map<String, dynamic> character;
   @override
   _FavoriteState createState() => _FavoriteState();
 }
@@ -22,43 +24,77 @@ class _FavoriteState extends State<Favorite> {
 
   @override
   Widget build(BuildContext context) {
+     // Obtener una instancia del modelo de datos
+        CardModel dataModel = Provider.of<CardModel>(context, listen: false);
    return IconButton(
         icon: _isFavorite
             ? const Icon(Icons.favorite_rounded, color: Colors.red) // Si es favorito, muestra el icono de favorito lleno
             : const Icon(Icons.favorite_border_rounded, color: Colors.black), // Si no es favorito, muestra el icono de favorito vacío
         onPressed: () {
-          toggleFavorite(); // Alternar estado de favorito cuando se presiona el botón
+          toggleFavorite(context); // Alternar estado de favorito cuando se presiona el botón
+          // Llamar al método updateData
+        dataModel.updateData();
    });
   }
   
   // Método para verificar si el personaje es favorito
   Future<void> checkIsFavorite() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? favorites = prefs.getStringList('favorites') ?? [];
-    if (favorites.isNotEmpty) {
-      List<int> favoriteIds = favorites.map((id) => int.parse(id)).toList();
-      int numberToFind=int.parse(widget.characterID);
+    
+    List<Map<String, dynamic>> storageData = await obtenerListaDesdeSharedPreferences();
+   
+
+    if (storageData.isNotEmpty) {
+      List<int> favoriteIds = storageData.map((character) => int.parse(character["id"])).toList();
+      int numberToFind=int.parse(widget.character["id"]);
       setState(() {
         _isFavorite = favoriteIds.contains(numberToFind);
+        
       });
     }
   }
 
   // Método para alternar el estado de favorito
-  Future<void> toggleFavorite() async {
+  Future<void> toggleFavorite(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? favorites = prefs.getStringList('favorites') ?? [];
+    List<Map<String, dynamic>> storageData = await obtenerListaDesdeSharedPreferences();
+
+   
+        
+    
     setState(() {
       if (_isFavorite) {
-        favorites.remove(widget.characterID); // Quitar el personaje de la lista de favoritos
+        // Remover el elemento con el id específico
+        storageData.removeWhere((element) => element['id'] == widget.character["id"]);
         _isFavorite=false;
       } else {
-        favorites.add(widget.characterID); // Agregar el personaje a la lista de favoritos
+        widget.character['isFavorite'] = true;
+        storageData.add(widget.character); // Agregar el personaje a la lista de favoritos
          _isFavorite=true;
+         
       }
-      prefs.setStringList('favorites', favorites); // Guardar la lista de favoritos actualizada en SharedPreferences
+      print(storageData);
+       String listaJSON = json.encode(storageData);
+       prefs.setString('favorites', listaJSON); // Guardar la lista de favoritos actualizada en SharedPreferences
     });
   }
+
+  Future<List<Map<String, dynamic>>> obtenerListaDesdeSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+    // Obtener la cadena JSON de SharedPreferences
+    String? listaJSON = prefs.getString('favorites');
+    print(listaJSON);
+    // return [];
+    // Convertir la cadena JSON a una lista de mapas
+    if (listaJSON != null && listaJSON.isNotEmpty) {
+      List<dynamic> listaDynamic = json.decode(listaJSON);
+      List<Map<String, dynamic>> listaMap = List<Map<String, dynamic>>.from(listaDynamic);
+      return listaMap;
+    } else {
+      return []; // O algún valor predeterminado si no se encuentra la lista
+    }
+}
+
 }
 
 class Favorite2 extends StatefulWidget {
@@ -84,7 +120,7 @@ class _FavoriteState2 extends State<Favorite2> {
         color: isFavorite ? Colors.red : null,
       ),
       onPressed: () {
-        cardModel.removeFavorite(widget.itemId);
+        cardModel.removeItemById(widget.itemId);
       },
     );
 

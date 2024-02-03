@@ -1,24 +1,68 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CardModel extends ChangeNotifier {
-  List<Map<String, dynamic>> _items = [
-    {'id': '1', 'title': 'Item 1', 'subtitle': 'Subtitle 1', 'isFavorite': true},
-    {'id': '2', 'title': 'Item 2', 'subtitle': 'Subtitle 2', 'isFavorite': true},
-    {'id': '3', 'title': 'Item 3', 'subtitle': 'Subtitle 3', 'isFavorite': true},
-  ];
+  late SharedPreferences _prefs;
+  late List<Map<String, dynamic>> _items;
+
+  CardModel() {
+    _items = [];
+    _init();
+  }
+
+  Future<void> _init() async {
+    _prefs = await SharedPreferences.getInstance();
+    _loadItemsFromPrefs();
+  }
 
   List<Map<String, dynamic>> get items => _items;
 
-  void toggleFavorite(String itemId) {
-    final itemIndex = _items.indexWhere((item) => item['id'] == itemId);
-    if (itemIndex != -1) {
-      _items[itemIndex]['isFavorite'] = !_items[itemIndex]['isFavorite'];
-      notifyListeners();
-    }
+  void _loadItemsFromPrefs() async {
+  // Obtener la cadena JSON de SharedPreferences
+  List<Map<String, dynamic>> storageData = await obtenerListaDesdeSharedPreferences();
+
+    _items = storageData;
+    notifyListeners();
+}
+
+ Future<void> removeItemById(String id) async {
+    _items.removeWhere((element) => element['id'] == id);
+    await _saveItemsToPrefs();
+    notifyListeners();
   }
 
-  void removeFavorite(String itemId) {
-    _items.removeWhere((item) => item["id"] == itemId);
-    notifyListeners(); // Notifica a los consumidores sobre el cambio en los datos
+  Future<void> _saveItemsToPrefs() async {
+    // Convertir la lista de mapas a una cadena JSON
+    String listaJSON = json.encode(_items);
+
+    // Guardar la cadena JSON en SharedPreferences
+    await _prefs.setString('favorites', listaJSON);
+    notifyListeners();
   }
+
+  updateData(){
+    _init();
+    notifyListeners();
+
+  }
+
+
+  Future<List<Map<String, dynamic>>> obtenerListaDesdeSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+    // Obtener la cadena JSON de SharedPreferences
+    String? listaJSON = prefs.getString('favorites');
+    print(listaJSON);
+    // return [];
+    // Convertir la cadena JSON a una lista de mapas
+    if (listaJSON != null && listaJSON.isNotEmpty) {
+      List<dynamic> listaDynamic = json.decode(listaJSON);
+      List<Map<String, dynamic>> listaMap = List<Map<String, dynamic>>.from(listaDynamic);
+      return listaMap;
+    } else {
+      return []; // O algún valor predeterminado si no se encuentra la lista
+    }
+}
 }

@@ -82,7 +82,7 @@ class HomeScreenMethods {
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          Favorite(characterID:character['id']),
+                          Favorite(character:character),
                         ],
                       ),
                       

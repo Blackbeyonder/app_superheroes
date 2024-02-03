@@ -1,60 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../provider/cardModel.dart';
 import '../services/superHeroeService.dart';
 import '../widgets/favorite.dart';
 
-class FavoriteMethods extends StatefulWidget {
-  const FavoriteMethods({Key? key}) : super(key: key);
+class FavoriteMethods {
 
-  @override
-  _FavoriteMethodsState createState() => _FavoriteMethodsState();
-}
 
-class _FavoriteMethodsState extends State<FavoriteMethods> {
 
-  List<Map<String, dynamic>> favoritesWithDetail = [];
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: FutureBuilder(
-        future: buildCardsFavorites(), // El Future que se está esperando
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          // Estado del futuro: 'none', 'waiting', 'done', 'error'
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // Mientras el Future está en espera
-            return CircularProgressIndicator(); // Mostrar un indicador de carga
-          } else if (snapshot.hasError) {
-            // Si hay un error al completar el Future
-            return Text('Error: ${snapshot.error}');
-          } else {
-            // Cuando el Future se completa exitosamente
-            return snapshot.data ?? Text('No hay datos');
-          }
-        },
-      ),
-    );
-  }
-
-  Future<Widget> buildCardsFavorites() async {
+  Future<Widget> buildCardsFavorites(BuildContext context) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<String>? favorites = prefs.getStringList('favorites') ?? [];
-      
-
-      for (var id in favorites) {
-        Map<String, dynamic> characterInfo = {};
-        var detail = await SuperHeroeService().getSearchById1(id);
-        characterInfo["id"] = detail["id"];
-        characterInfo["name"] = detail["name"];
-        characterInfo["publisher"] = detail["biography"]["publisher"];
-
-        var img = detail["image"] != null ? detail["image"]["url"] : "";
-        bool exist = await SuperHeroeService().checkImageExistence(img);
-        characterInfo["img"] = exist == true ? img : "not found";
-        favoritesWithDetail.add(characterInfo);
-      }
-
+      //  List<Map<String, dynamic>> storageData = await obtenerListaDesdeSharedPreferences();
+      final storageData = Provider.of<CardModel>(context).items;
+      print("faviriteMethods");
+      print(storageData);
+       print("faviriteMethods-----");
       return Container(
           child: Column(
         children: [
@@ -69,10 +33,10 @@ class _FavoriteMethodsState extends State<FavoriteMethods> {
           Expanded(
             child: ListView.builder(
               itemCount:
-                  favoritesWithDetail.length, // Número de elementos en la lista
+                  storageData.length, // Número de elementos en la lista
               itemBuilder: (BuildContext context, int index) {
                 // Función que construye y devuelve una tarjeta para cada elemento
-                final character = favoritesWithDetail[index];
+                final character = storageData[index];
                 return GestureDetector(
                   onTap: () {
                     // Acción a realizar cuando se hace clic en la tarjeta
@@ -115,8 +79,8 @@ class _FavoriteMethodsState extends State<FavoriteMethods> {
                                 style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              Favorite(
-                                characterID: character['id'],
+                              Favorite2(
+                                itemId: character["id"],
                                 
                               ),
                             ],
@@ -141,12 +105,22 @@ class _FavoriteMethodsState extends State<FavoriteMethods> {
       return Container(child: Text("error $e"));
     }
   }
-  void removeFromFavorites(String characterID) {
-    setState(() {
-      // Actualizar la lista de favoritos eliminando el personaje con el ID especificado
-      favoritesWithDetail.removeWhere((character) => character['id'] == characterID);
-      print(favoritesWithDetail);
-    });
-    // Implementar lógica para eliminar el personaje de la lista de favoritos
-  }
+  
+
+  Future<List<Map<String, dynamic>>> obtenerListaDesdeSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+    // Obtener la cadena JSON de SharedPreferences
+    String? listaJSON = prefs.getString('favorites');
+    print(listaJSON);
+    // return [];
+    // Convertir la cadena JSON a una lista de mapas
+    if (listaJSON != null && listaJSON.isNotEmpty) {
+      List<dynamic> listaDynamic = json.decode(listaJSON);
+      List<Map<String, dynamic>> listaMap = List<Map<String, dynamic>>.from(listaDynamic);
+      return listaMap;
+    } else {
+      return []; // O algún valor predeterminado si no se encuentra la lista
+    }
+}
 }

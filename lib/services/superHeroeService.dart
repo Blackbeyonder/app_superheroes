@@ -82,7 +82,8 @@ Future<List<Map<String, dynamic>>> getNameAllSuperHeroes() async {
 
 
 getSearchById1(String id) async {
-  Map<String, dynamic> results = {}; // Lista para almacenar los resultados
+  try {
+     Map<String, dynamic> results = {}; // Lista para almacenar los resultados
   final response = await http.get(Uri.parse(apiUrl+"/$id"));
   if (response.statusCode == 200) {
      // Convierte la respuesta JSON en un objeto Dart
@@ -102,6 +103,13 @@ getSearchById1(String id) async {
     // Ocurrió un error al hacer la solicitud
     print('Error al hacer la solicitud: ${response.statusCode}');
   }
+    
+  } catch (e) {
+    print(e);
+    Map<String, dynamic> results = {};
+    return results;
+  }
+ 
 
 }
 
