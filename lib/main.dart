@@ -1,7 +1,7 @@
 
 import 'package:search_superheroes/provider/cardModel.dart';
 import 'package:search_superheroes/provider/homeProvider.dart';
-import 'package:search_superheroes/screens/detailScren.dart';
+import 'package:search_superheroes/screens/detailScreen.dart';
 import 'package:search_superheroes/screens/favoritesScreen.dart';
 import 'package:search_superheroes/screens/homeScreen.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       initialRoute: '/',
       routes: {
         '/': (context) => const HomeScreen(),
-        '/detail': (context) => const DetailScren(),
+        '/detail': (context) => const DetailScreen(),
         '/favorites': (context) => const FavoritesScreen(),
         // Agrega más rutas según sea necesario
       },
