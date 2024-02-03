@@ -76,8 +76,9 @@ class FavoriteMethods {
                                 style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              Favorite2(
-                                itemId: character["id"],
+                              Favorite(
+                                character: character,
+                                mode:"favorite"
                                 
                               ),
                             ],
