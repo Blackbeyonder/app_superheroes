@@ -19,7 +19,6 @@ class HomeProvider extends ChangeNotifier {
   }
 
    void activerItem(newItem) {
-    print(newItem);
     _itemsHome.forEach((element) => {
       if(element["id"]==newItem["id"]){
           element["isFavorite"]=true
@@ -30,16 +29,16 @@ class HomeProvider extends ChangeNotifier {
   }
 
   void desactiveItem(itemId) {
-    print("desactiveItem");
-    print(itemId);
+    // print("desactiveItem");
+    // print(itemId);
     _itemsHome.forEach((element) => {
       if(element["id"]==itemId){
           element["isFavorite"]=false
       }
     });
     // updateItemsHome(_itemsHome);
-    print("deacativate----itemhome");
-    print(_itemsHome);
+    // print("deacativate----itemhome");
+    // print(_itemsHome);
     notifyListeners(); // Notificar a los consumidores sobre el cambio en los datos
   }
 

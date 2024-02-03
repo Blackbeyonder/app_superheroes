@@ -37,9 +37,9 @@ class HomeScreenMethods {
     homeProvider.updateItemsHome(list10Characters);
     final itemsHome = homeProvider.itemsHome;
 
-    print("HOME");
-    print(itemsHome);
-    print("HOME----");
+    // print("HOME");
+    // print(itemsHome);
+    // print("HOME----");
 
     try {
       return Container(

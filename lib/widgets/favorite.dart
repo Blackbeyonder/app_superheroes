@@ -36,7 +36,7 @@ class _FavoriteState extends State<Favorite> {
         onPressed: () {
           toggleFavorite(context, homeProvider); // Alternar estado de favorito cuando se presiona el botón
           // Llamar al método updateData
-        dataModel.updateData();
+          dataModel.updateData();
         
    });
   }
@@ -51,55 +51,36 @@ class _FavoriteState extends State<Favorite> {
       List<int> favoriteIds = storageData.map((character) => int.parse(character["id"])).toList();
       int numberToFind=int.parse(widget.character["id"]);
       setState(() {
-        widget.character["isFavorite"] = favoriteIds.contains(numberToFind);
+        
+        if(favoriteIds.contains(numberToFind)){
+            widget.character["isFavorite"] = true;
+        }else{
+            widget.character["isFavorite"] = false;
+        }
         
       });
     }
   }
 
   // Método para alternar el estado de favorito
-  Future<void> toggleFavorite(BuildContext context,homeProvider) async {
+  Future<void> toggleFavorite(BuildContext context, homeProvider) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<Map<String, dynamic>> storageData = await getfavorites();
 
-   
-        
-    
-   
       if (widget.character["isFavorite"]) {
         // Remover el elemento con el id específico
         storageData.removeWhere((element) => element['id'] == widget.character["id"]);
-        widget.character["isFavorite"]=false;
         homeProvider.desactiveItem(widget.character["id"]);
         
       } else {
-        widget.character['isFavorite'] = true;
         storageData.add(widget.character); // Agregar el personaje a la lista de favoritos
         homeProvider.activerItem(widget.character);
       }
-      print(storageData);
        String listaJSON = json.encode(storageData);
        prefs.setString('favorites', listaJSON); // Guardar la lista de favoritos actualizada en SharedPreferences
      
-     setState(() {});
   }
 
-//   Future<List<Map<String, dynamic>>> obtenerListaDesdeSharedPreferences() async {
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-  
-//     // Obtener la cadena JSON de SharedPreferences
-//     String? listaJSON = prefs.getString('favorites');
-//     print(listaJSON);
-//     // return [];
-//     // Convertir la cadena JSON a una lista de mapas
-//     if (listaJSON != null && listaJSON.isNotEmpty) {
-//       List<dynamic> listaDynamic = json.decode(listaJSON);
-//       List<Map<String, dynamic>> listaMap = List<Map<String, dynamic>>.from(listaDynamic);
-//       return listaMap;
-//     } else {
-//       return []; // O algún valor predeterminado si no se encuentra la lista
-//     }
-// }
 
 }
 
@@ -117,7 +98,7 @@ class _FavoriteState2 extends State<Favorite2> {
     final isFavorite = Provider.of<CardModel>(context)
         .items
         .firstWhere((item) => item['id'] == widget.itemId)['isFavorite'];
-        print(isFavorite);
+        
         final cardModel = Provider.of<CardModel>(context); // Obtiene la instancia de CardModel desde el context
 
     final homeProvider = Provider.of<HomeProvider>(context,listen: false);
@@ -128,7 +109,7 @@ class _FavoriteState2 extends State<Favorite2> {
       ),
       onPressed: () async {
         bool result = await showDialogDelete(context, '¿Do you want delete it?');
-        print(result);
+        // print(result);
         if (result) {
           cardModel.removeItemById(widget.itemId);
           homeProvider.desactiveItem(widget.itemId);
@@ -173,5 +154,20 @@ static Future<bool> showDialogDelete(BuildContext context, String message) async
 
 
 
+class ButtonFavorite extends StatefulWidget {
+  const ButtonFavorite({ Key? key }) : super(key: key);
+
+  @override
+  _ButtonFavoriteState createState() => _ButtonFavoriteState();
+}
+
+class _ButtonFavoriteState extends State<ButtonFavorite> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
+    );
+  }
+}
 
 
