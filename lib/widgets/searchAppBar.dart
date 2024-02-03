@@ -65,7 +65,13 @@ class _SearchAppBarState extends State<SearchAppBar> {
         IconButton(
           icon: Icon(Icons.favorite_outline_rounded, color:textColorAndIcon),
           onPressed: () {
-            Navigator.pushNamed(context,'/favorites');
+             // Obtener la ruta actual
+          String currentRoute = ModalRoute.of(context)?.settings.name ?? '';
+
+          // Verificar si la ruta actual ya es la pantalla de favoritos
+          if (currentRoute != '/favorites') {
+            Navigator.pushNamed(context, '/favorites');
+          }
           },
         ),
         IconButton(

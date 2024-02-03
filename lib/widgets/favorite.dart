@@ -125,12 +125,52 @@ class _FavoriteState2 extends State<Favorite2> {
         isFavorite ? Icons.favorite : Icons.favorite_border,
         color: isFavorite ? Colors.red : null,
       ),
-      onPressed: () {
-        cardModel.removeItemById(widget.itemId);
-         homeProvider.desactiveItem(widget.itemId);
+      onPressed: () async {
+        bool result = await showDialogDelete(context, '¿Do you want delete it?');
+        print(result);
+        if (result) {
+          cardModel.removeItemById(widget.itemId);
+          homeProvider.desactiveItem(widget.itemId);
+        } 
+        
         
       },
     );
 
   }
+
+
+ 
+static Future<bool> showDialogDelete(BuildContext context, String message) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Retorna true si el usuario selecciona "Sí"
+              },
+              child: Text('Sí'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Retorna false si el usuario selecciona "No"
+              },
+              child: Text('No'),
+            ),
+          ],
+        );
+      },
+    ) ?? false; // Por defecto, retorna false si el diálogo se cierra sin seleccionar ninguna opción
+  }
+  
 }
+
+
+
+
+
+

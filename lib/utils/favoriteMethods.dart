@@ -16,9 +16,6 @@ class FavoriteMethods {
     try {
       //  List<Map<String, dynamic>> storageData = await obtenerListaDesdeSharedPreferences();
       final storageData = Provider.of<CardModel>(context).items;
-      print("faviriteMethods");
-      print(storageData);
-       print("faviriteMethods-----");
       return Container(
           child: Column(
         children: [
