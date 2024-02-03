@@ -153,7 +153,7 @@ static Future<bool> showDialogDelete(BuildContext context, String message) async
               onPressed: () {
                 Navigator.of(context).pop(true); // Retorna true si el usuario selecciona "Sí"
               },
-              child: Text('Sí'),
+              child: Text('Yes'),
             ),
             TextButton(
               onPressed: () {
