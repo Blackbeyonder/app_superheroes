@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../provider/cardModel.dart';
+import '../provider/FavoriteProvider.dart';
 import '../utils/favoriteMethods.dart';
 import '../widgets/favorite.dart';
 import '../widgets/searchAppBar.dart';

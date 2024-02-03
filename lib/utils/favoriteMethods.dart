@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../provider/cardModel.dart';
+import '../provider/FavoriteProvider.dart';
 import '../services/superHeroeService.dart';
 import '../widgets/favorite.dart';
 
@@ -15,7 +15,7 @@ class FavoriteMethods {
   Future<Widget> buildCardsFavorites(BuildContext context) async {
     try {
       //  List<Map<String, dynamic>> storageData = await obtenerListaDesdeSharedPreferences();
-      final storageData = Provider.of<CardModel>(context).items;
+      final storageData = Provider.of<FavoriteProvider>(context).items;
       return Container(
           child: Column(
         children: [

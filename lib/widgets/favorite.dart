@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../provider/cardModel.dart';
+import '../provider/FavoriteProvider.dart';
 import '../provider/homeProvider.dart';
 import '../services/sharedPreference.dart';
 
@@ -27,7 +27,7 @@ class _FavoriteState extends State<Favorite> {
   @override
   Widget build(BuildContext context) {
      // Obtener una instancia del modelo de datos
-        CardModel dataModel = Provider.of<CardModel>(context, listen: false);
+        FavoriteProvider dataModel = Provider.of<FavoriteProvider>(context, listen: false);
         final homeProvider = Provider.of<HomeProvider>(context,listen: true);
    return IconButton(
         icon: widget.character["isFavorite"]
@@ -95,11 +95,11 @@ class Favorite2 extends StatefulWidget {
 class _FavoriteState2 extends State<Favorite2> {
   @override
   Widget build(BuildContext context) {
-    final isFavorite = Provider.of<CardModel>(context)
+    final isFavorite = Provider.of<FavoriteProvider>(context)
         .items
         .firstWhere((item) => item['id'] == widget.itemId)['isFavorite'];
         
-        final cardModel = Provider.of<CardModel>(context); // Obtiene la instancia de CardModel desde el context
+        final cardModel = Provider.of<FavoriteProvider>(context); // Obtiene la instancia de CardModel desde el context
 
     final homeProvider = Provider.of<HomeProvider>(context,listen: false);
     return IconButton(

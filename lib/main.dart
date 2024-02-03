@@ -1,5 +1,5 @@
 
-import 'package:search_superheroes/provider/cardModel.dart';
+import 'package:search_superheroes/provider/FavoriteProvider.dart';
 import 'package:search_superheroes/provider/homeProvider.dart';
 import 'package:search_superheroes/screens/detailScreen.dart';
 import 'package:search_superheroes/screens/favoritesScreen.dart';
@@ -11,7 +11,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => CardModel()),
+        ChangeNotifierProvider(create: (_) => FavoriteProvider()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         // Agrega aquí otros proveedores si los necesitas
       ],

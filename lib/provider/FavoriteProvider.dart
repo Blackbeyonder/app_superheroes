@@ -5,11 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/sharedPreference.dart';
 
-class CardModel extends ChangeNotifier {
+class FavoriteProvider extends ChangeNotifier {
   late SharedPreferences _prefs;
   late List<Map<String, dynamic>> _items;
 
-  CardModel() {
+  FavoriteProvider() {
     _items = [];
     _init();
   }
