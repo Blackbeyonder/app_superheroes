@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../services/sharedPreference.dart';
+
 class CardModel extends ChangeNotifier {
   late SharedPreferences _prefs;
   late List<Map<String, dynamic>> _items;
@@ -21,7 +23,7 @@ class CardModel extends ChangeNotifier {
 
   void _loadItemsFromPrefs() async {
   // Obtener la cadena JSON de SharedPreferences
-  List<Map<String, dynamic>> storageData = await obtenerListaDesdeSharedPreferences();
+  List<Map<String, dynamic>> storageData = await getfavorites();
 
     _items = storageData;
     notifyListeners();
@@ -49,20 +51,5 @@ class CardModel extends ChangeNotifier {
   }
 
 
-  Future<List<Map<String, dynamic>>> obtenerListaDesdeSharedPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
   
-    // Obtener la cadena JSON de SharedPreferences
-    String? listaJSON = prefs.getString('favorites');
-    print(listaJSON);
-    // return [];
-    // Convertir la cadena JSON a una lista de mapas
-    if (listaJSON != null && listaJSON.isNotEmpty) {
-      List<dynamic> listaDynamic = json.decode(listaJSON);
-      List<Map<String, dynamic>> listaMap = List<Map<String, dynamic>>.from(listaDynamic);
-      return listaMap;
-    } else {
-      return []; // O algún valor predeterminado si no se encuentra la lista
-    }
-}
 }

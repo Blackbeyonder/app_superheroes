@@ -16,25 +16,21 @@ class HomeScreenMethods {
     for (var number in randomNumbers) {
       Map<String, dynamic> characterInfo = {};
       String numberAsString = number.toString();
-      var searchById1 =
-          await SuperHeroeService().getSearchById1(numberAsString);
+      var searchById1 = await SuperHeroeService().getSearchById1(numberAsString);
       if (searchById1?.containsKey('response') &&
           searchById1["response"] == "success") {
-        characterInfo["id"] = searchById1["id"];
-        characterInfo["name"] = searchById1["name"];
+          characterInfo["id"] = searchById1["id"];
+          characterInfo["name"] = searchById1["name"];
 
-        //Check img
-        var img =
-            searchById1["image"] != null ? searchById1["image"]["url"] : "";
-        bool exist = await SuperHeroeService().checkImageExistence(img);
-        characterInfo["img"] = exist == true ? img : "";
+          //Check img
+          var img = searchById1["image"] != null ? searchById1["image"]["url"] : "";
+          bool exist = await SuperHeroeService().checkImageExistence(img);
+          characterInfo["img"] = exist == true ? img : "";
 
-        characterInfo["publisher"] = searchById1["biography"]["publisher"];
-        characterInfo["isFavorite"] = false;
-        list10Characters.add(characterInfo);
+          characterInfo["publisher"] = searchById1["biography"]["publisher"];
+          characterInfo["isFavorite"] = false;
+          list10Characters.add(characterInfo);
       }
-      
-      
     }
 
     final homeProvider = Provider.of<HomeProvider>(context, listen: false);
