@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 import '../services/superHeroeService.dart';
 import '../utils/detailScreenMethods.dart';
@@ -20,67 +21,76 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
     super.initState();
+    // _getHeroDetails();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Llamar al método para obtener detalles de los héroes al cambiar las dependencias
-    this._getHeroDetails();
-  }
 
   // Método asincrónico para obtener detalles del héroe
-  Future<void> _getHeroDetails() async {
+  Future _getHeroDetails() async {
     try {
       // print("AQUI");
       // Obtén los argumentos pasados desde la ruta anterior
       final Map<String, dynamic> args =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       idSelected = args['idSelected'];
+      Map<String, dynamic> info= await DetailScreenMethods.findInfo(idSelected);
+      return info;
 
-      // Llamar al servicio para obtener detalles del héroe
-      final response = await SuperHeroeService().getSearchById1(idSelected);
-      var img = response["image"] != null ? response["image"]["url"] : "";
-        bool exist= await SuperHeroeService().checkImageExistence(img);
-        response["image"]["url"] = exist==true ? img : "not found";
-
-      // Procesar la respuesta del servicio y actualizar el estado
-      setState(() {
-        // print(response);
-        dataCharacter =
-            response; // Actualizar el estado con el nombre del héroe
-        imageUrl = dataCharacter["image"]["url"];
-        Name = dataCharacter["name"];
-        // DetailScreenMethods().reorganizeObj(dataCharacter);
-        // print(imageUrl);
-      });
     } catch (error) {
       // Manejar errores si la solicitud falla
       print('Error en la solicitud: $error');
     }
   }
 
+  PreferredSizeWidget? checkInfoAppBar(infoAppBar) {
+    print(dataCharacter["infoAppBar"]);
+  if (infoAppBar != null && infoAppBar.isNotEmpty) {
+    return SearchAppBar(imageUrl: infoAppBar);
+  } else {
+    return SearchAppBar();
+  }
+}
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: imageUrl.isNotEmpty
-            ? SearchAppBar(imageUrl: imageUrl)
-            : null, //Nose porque funciona con null
-        body: Container(
+    // return Text("algo");
+    return FutureBuilder(
+    future: _getHeroDetails(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      } else if (snapshot.hasError) {
+        return const Center(
+          child: Text('Error al cargar los detalles'),
+        );
+      } else {
+        Map<String, dynamic> dataCharacter = snapshot.data as Map<String, dynamic>;
+        // Manipula los datos aquí 
+        String characterName = dataCharacter["allInfo"]['name'];
+        String imageUrl = dataCharacter["imageUrl"];
+
+        // Puedes usar los datos manipulados para construir tus widgets
+        return Scaffold(
+          appBar: checkInfoAppBar(imageUrl),
+          body: Container(
           color: Color.fromARGB(255, 240, 240, 240),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text(Name,
+                child: Text(characterName,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 20)),
               ),
               if (imageUrl.isNotEmpty) // Verificar si imageUrl no está vacío
                 Center(
-                  child: showImg(imageUrl: imageUrl, Name: Name),
+                  child: showImg(imageUrl: imageUrl, Name: characterName),
                 ),
               if (imageUrl.isEmpty)
                 const Center(
@@ -93,12 +103,17 @@ class _DetailScreenState extends State<DetailScreen> {
                 child: SingleChildScrollView(
                   child: Container(
                       // color: Colors.blue,
-                      child: DetailScreenMethods.buildInfo(dataCharacter)),
+                      child: DetailScreenMethods.buildInfo(dataCharacter["allInfo"])),
                 ),
               ),
             ],
           ),
-        ));
+        )
+        );
+      }
+    },
+  );
+    
   }
 }
 

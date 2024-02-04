@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../services/superHeroeService.dart';
+
 class DetailScreenMethods {
 
   static Widget buildInfo(dataCharacter) {
@@ -81,4 +83,29 @@ class DetailScreenMethods {
  static String capitalize(String text) {
   return text.substring(0, 1).toUpperCase() + text.substring(1);
 }
+
+static Future<Map<String, dynamic>> findInfo(idSelected) async {
+    Map<String, dynamic> response={};
+    try {
+      // Llamar al servicio para obtener detalles del héroe
+      final getSearchById1 = await SuperHeroeService().getSearchById1(idSelected);
+      var img = getSearchById1["image"] != null ? getSearchById1["image"]["url"] : "";
+      bool exist= await SuperHeroeService().checkImageExistence(img);
+      getSearchById1["image"]["url"] = exist==true ? img : "";
+
+      response["imageUrl"]=getSearchById1["image"]["url"];
+      response["allInfo"]=getSearchById1;
+      
+      return response;
+
+      
+    } catch (e) {
+      print("error findInfo() = $e");
+      return response;
+      
+    }
+  
+}
+
+
 }
