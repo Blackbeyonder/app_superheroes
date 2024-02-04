@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:search_superheroes/widgets/favorite.dart';
 
 import '../services/superHeroeService.dart';
 import '../utils/detailScreenMethods.dart';
@@ -33,7 +34,7 @@ class _DetailScreenState extends State<DetailScreen> {
       final Map<String, dynamic> args =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       idSelected = args['idSelected'];
-      Map<String, dynamic> info= await DetailScreenMethods.findInfo(idSelected);
+      Map<String, dynamic> info= await DetailScreenMethods.findInfo(context,idSelected);
       return info;
 
     } catch (error) {
@@ -72,6 +73,7 @@ class _DetailScreenState extends State<DetailScreen> {
         // Manipula los datos aquí 
         String characterName = dataCharacter["allInfo"]['name'];
         String imageUrl = dataCharacter["imageUrl"];
+        Map<String, dynamic> toFavorite= dataCharacter["toFavorite"];
 
         // Puedes usar los datos manipulados para construir tus widgets
         return Scaffold(
@@ -82,11 +84,17 @@ class _DetailScreenState extends State<DetailScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(characterName,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 20)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(characterName,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20)),
+                  ),
+                  Favorite(character: toFavorite, mode: "home")
+                ],
               ),
               if (imageUrl.isNotEmpty) // Verificar si imageUrl no está vacío
                 Center(
@@ -159,7 +167,7 @@ class showImg extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 8,
                               horizontal:
                                   16), // Ajusta el espaciado del contenedor del texto
@@ -170,14 +178,14 @@ class showImg extends StatelessWidget {
                           ),
                           child: Text(
                             Name,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                             height: 15), // Espacio entre la imagen y el texto
                         Container(
                           height: 500, // Altura de la imagen

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/FavoriteProvider.dart';
 import '../services/superHeroeService.dart';
 
 class DetailScreenMethods {
@@ -84,22 +86,53 @@ class DetailScreenMethods {
   return text.substring(0, 1).toUpperCase() + text.substring(1);
 }
 
-static Future<Map<String, dynamic>> findInfo(idSelected) async {
-    Map<String, dynamic> response={};
+static Future<Map<String, dynamic>> findInfo(context,idSelected) async {
+
     try {
+      Map<String, dynamic> response = {
+        "imageUrl": {},
+        "allInfo": {},
+        "toFavorite": {},
+      };
       // Llamar al servicio para obtener detalles del héroe
       final getSearchById1 = await SuperHeroeService().getSearchById1(idSelected);
       var img = getSearchById1["image"] != null ? getSearchById1["image"]["url"] : "";
       bool exist= await SuperHeroeService().checkImageExistence(img);
-      getSearchById1["image"]["url"] = exist==true ? img : "";
+      getSearchById1["image"]["url"] = exist==true ? img : "not found";
 
+      
       response["imageUrl"]=getSearchById1["image"]["url"];
       response["allInfo"]=getSearchById1;
+
+      Map<String, dynamic> toFavorite={};
+
+      toFavorite["id"]=getSearchById1["id"];
+      toFavorite["name"]=getSearchById1["name"];
+      toFavorite["img"]=getSearchById1["image"]["url"];
+      toFavorite["publisher"]=getSearchById1["biography"]["publisher"];
+      response["toFavorite"]=toFavorite;
+      response["toFavorite"]["isFavorite"]=false;
+
+      // {"id":"306","name":"Hal Jordan","img":"https://www.superherodb.com/pictures2/portraits/10/100/697.jpg","publisher":"DC Comics","isFavorite":true}
+
+      // final storageData = Provider.of<FavoriteProvider>(context, listen: false).items;
+      // var resultWhere = storageData.where((element) => element["id"] == getSearchById1["id"]);
+      // print("resultWhere");
+      // print(resultWhere);
+      // if (resultWhere.isNotEmpty) {
+      //   response["toFavorite"]["isFavorite"]=true;
+      // } else {
+      //   response["toFavorite"]["isFavorite"]=false;
+      // }
+      print("findInfo======");
+      // print(storageData);
+      print(response);
       
       return response;
 
       
     } catch (e) {
+      Map<String, dynamic> response = {};
       print("error findInfo() = $e");
       return response;
       
