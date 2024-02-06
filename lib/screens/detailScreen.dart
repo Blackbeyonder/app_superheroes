@@ -93,7 +93,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20)),
                   ),
-                  Favorite(character: toFavorite, mode: "home")
+                  // Favorite(character: toFavorite, mode: "home")
                 ],
               ),
               if (imageUrl.isNotEmpty) // Verificar si imageUrl no está vacío
